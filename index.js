@@ -1,6 +1,6 @@
 
 function isStr (str) {
-    return typeof str !== "string";
+    return typeof str === "string";
 }
 
 // This simplifies the payload in place, taking the event type into account
@@ -15,7 +15,7 @@ module.exports = function (event, pl) {
     // if it's a repository event, simplify its owner; otherwise convert the repository to just its
     // name
     if (event === "repository" && !isStr(pl.repository.owner)) pl.repository.owner = pl.repository.owner.login;
-    else if (!isStr(pl.repository)) pl.repository = pl.repository.full_name;
+    else if (pl.repository && !isStr(pl.repository)) pl.repository = pl.repository.full_name;
     
     // simplify forkee owner to just the username
     if (pl.forkee && !isStr(pl.forkee)) pl.forkee.owner = pl.forkee.owner.login;
@@ -48,4 +48,7 @@ module.exports = function (event, pl) {
 
     // simplify issue to number in issue comments
     if (event === "issue_comment" && !isStr(pl.issue)) pl.issue = pl.issue.number;
+    
+    // the data is changed in place, but we return it for chainability
+    return pl;
 };

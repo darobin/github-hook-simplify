@@ -1,8 +1,11 @@
 {
-    "name":         "github-hook-simplify"
-,   "version":      "0.0.1"
-,   "license":      "MIT"
-,   "dependencies": {}
-,   "main":         "./index.js"
+  "name": "github-hook-simplify",
+  "version": "0.0.1",
+  "license": "MIT",
+  "dependencies": {},
+  "main": "./index.js",
+  "devDependencies": {
+    "expect.js": "^0.3.1",
+    "mocha": "^2.2.5"
+  }
 }
-
