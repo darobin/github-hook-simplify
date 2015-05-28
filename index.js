@@ -1,6 +1,6 @@
 
 function isStr (str) {
-    return typeof str === "string";
+    return typeof str === "string" || typeof str === "number";
 }
 
 // This simplifies the payload in place, taking the event type into account
@@ -14,17 +14,21 @@ module.exports = function (event, pl) {
     
     // if it's a repository event, simplify its owner; otherwise convert the repository to just its
     // name
-    if (event === "repository" && !isStr(pl.repository.owner)) pl.repository.owner = pl.repository.owner.login;
-    else if (pl.repository && !isStr(pl.repository)) pl.repository = pl.repository.full_name;
+    if (event === "repository") {
+        if (!isStr(pl.repository.owner)) pl.repository.owner = pl.repository.owner.login;
+    }
+    else {
+        if (pl.repository && !isStr(pl.repository)) pl.repository = pl.repository.full_name;
+    }
     
     // simplify forkee owner to just the username
-    if (pl.forkee && !isStr(pl.forkee)) pl.forkee.owner = pl.forkee.owner.login;
+    if (pl.forkee && !isStr(pl.forkee.owner)) pl.forkee.owner = pl.forkee.owner.login;
 
     // pull requests have their own level of extra depth
     if (pl.pull_request) {
         var pr = pl.pull_request;
         // simplify the user to just the username
-        if (!isStr(pr.user)) pr.user = pr.user.login;
+        if (pr.user && !isStr(pr.user)) pr.user = pr.user.login;
         
         // simplify the assignee to just the username
         if (pr.assignee && !isStr(pr.assignee)) pr.assignee = pr.assignee.login;
@@ -41,7 +45,7 @@ module.exports = function (event, pl) {
     }
     
     // simplify issue reporter to username
-    if (pl.issue && !isStr(pl.issue.user)) pl.issue.user = pl.issue.user.login;
+    if (pl.issue && pl.issue.user && !isStr(pl.issue.user)) pl.issue.user = pl.issue.user.login;
     
     // simplify commenter to username
     if (pl.comment && !isStr(pl.comment.user)) pl.comment.user = pl.comment.user.login;
