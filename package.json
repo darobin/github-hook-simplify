@@ -1,0 +1,8 @@
+{
+    "name":         "github-hook-simplify"
+,   "version":      "0.0.1"
+,   "license":      "MIT"
+,   "dependencies": {}
+,   "main":         "./index.js"
+}
+
